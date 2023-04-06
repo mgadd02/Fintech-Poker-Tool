@@ -2,12 +2,15 @@
 <html>
   <head>
     <title>Prize Tool</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <style>
       /* Set default font family and size */
 body {
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 16px;
     line-height: 1.5;
+    
   }
   
   /* Center all content horizontally and vertically */
@@ -17,7 +20,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-  }
+  }s
   
   /* Add some spacing to the top and bottom of the page */
   main {
@@ -27,19 +30,19 @@ body {
   /* Style headings */
   h1, h2, h3 {
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
   }
   
   h1 {
-    font-size: 48px;
+    font-size: 92px;
   }
   
   h2 {
-    font-size: 36px;
+    font-size: 56px;
   }
   
   h3 {
-    font-size: 24px;
+    font-size: 42px;
   }
   
   /* Style paragraphs */
@@ -66,28 +69,21 @@ body {
     border-radius: 4px;
     color: #fff;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 26px;
     font-weight: bold;
     padding: 12px 24px;
     transition: all 0.2s ease-in-out;
+    margin: 2em;
   }
   
-  button.primary {
+  button{
     background-color: #ff6600d4;
   }
   
-  button.primary:hover {
+  button:hover{
     background-color: #ff6600;
   }
-  
-  button.secondary {
-    background-color: #6c757d;
-  }
-  
-  button.secondary:hover {
-    background-color: #5a6268;
-  }
-  
+    
   ul.horizontal {
   list-style: none;
   margin: 0;
@@ -99,9 +95,20 @@ ul.horizontal li {
   margin: 0 10px;
   padding: 0;
 }
+
+img{
+  width: 30%;
+}
     </style>
+    
+    
   </head>
   <body onload="fetchData()">
+    <div style="border: 5px solid black; width: 40%; display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3em;
+    align-items: center;">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Optiver_Logo.svg/1280px-Optiver_Logo.svg.png" alt="Company Logo">
     <h1>Industry Poker Night</h1>
     <h2>Prize Winners:</h2>
@@ -140,5 +147,6 @@ ul.horizontal li {
       <button class="btn btn-primary" type="submit">Stop</button>
     </form></li>
     </ul>
+    </div>
   </body>
 </html>
