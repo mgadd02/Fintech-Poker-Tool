@@ -1,33 +1,56 @@
-import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
-
-class MyApp(QMainWindow):
+from flask import Flask, render_template, jsonify
+from draw import doDraw, writeDraw
+from flask_socketio import SocketIO, emit
+import time
+class MyClass:
     def __init__(self):
-        super().__init__()
-        self.setWindowTitle("My App")
+        self.winners = ["","",""]
+        self.isRunning = 0
 
-        # Create labels for the outputs
-        self.first_output = QLabel(self)
-        self.first_output.move(20, 20)
-        self.second_output = QLabel(self)
-        self.second_output.move(20, 50)
-        self.third_output = QLabel(self)
-        self.third_output.move(20, 80)
+    def update_strings(self):
+        socketio.emit('update', {'strings': self.winners})
 
-        # Create the "Run" button
-        self.run_button = QPushButton("Run", self)
-        self.run_button.move(20, 120)
-        self.run_button.clicked.connect(self.run)
+app = Flask(__name__)
+site_obj = MyClass()
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 
-    def run(self):
-        # This is the function that gets called when the "Run" button is clicked
-        # Replace the code below with whatever code you want to run when the button is clicked
-        self.first_output.setText("First output")
-        self.second_output.setText("Second output")
-        self.third_output.setText("Third output")
+@app.route('/')
+def index():
+    return render_template('index.html')
+    
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    my_app = MyApp()
-    my_app.show()
-    sys.exit(app.exec())
+@app.route('/start', methods=['POST'])
+def buttonStart():
+    #start
+    site_obj.isRunning = 1
+    return render_template('index.html', output=site_obj.winners)
+
+@app.route('/stop', methods=['POST'])
+def buttonStop():
+    # Function to perform (in this case, do nothing)
+    site_obj.isRunning = 0
+    site_obj.update_strings()
+    time.sleep(0.01)
+    return render_template('index.html', output=site_obj.winners)
+
+@app.route('/spam')
+def spam():
+    while site_obj.isRunning == 1:
+        site_obj.winners = doDraw()
+        site_obj.update_strings()
+    site_obj.update_strings()
+    return ""
+
+@socketio.on('connect')
+def handle_connect():
+
+    print('Client connected')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+    
+
+if __name__ == '__main__':
+    socketio.run(app)
